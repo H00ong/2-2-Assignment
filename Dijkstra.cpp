@@ -7,7 +7,7 @@ using namespace std;
 using pr = pair<int, int>;
 
 vector<pr> adj[10000];
-map<int, int> result;
+int result[10000];
 bool isInTree[10000];
 
 int main() 
@@ -55,9 +55,9 @@ int main()
 		}
 	}
 
-	for (auto elem : result) 
+	for (int i = 1; i < vertexCount; i++) 
 	{
-		cout << elem.first << " " << elem.second << endl;
+		cout << i << " " << result[i] << endl;
 	}
 
 	return 0;
