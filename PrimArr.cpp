@@ -10,7 +10,7 @@ using tp = tuple<int, int, int>;
 
 bool isInTree[10000];
 vector<pr> adj[10000];
-vector<pr> weightArr[10000];
+pr weightArr[10000];
 
 int main(void) {
 	ios::sync_with_stdio(false);
@@ -31,7 +31,8 @@ int main(void) {
 
 	for(int i = 0; i < vertexCount; i++)
 	{
-		weightArr[i].push_back(make_pair(INT32_MAX, -1));
+		weightArr[i].first = INT32_MAX;
+		weightArr[i].second = -1;
 	}
 	
 	isInTree[0] = true;
@@ -44,10 +45,10 @@ int main(void) {
 	{
 		for (auto elem : adj[minIndex])
 		{
-			if (weightArr[elem.second][0].first > elem.first)
+			if (weightArr[elem.second].first > elem.first)
 			{
-				weightArr[elem.second][0].first = elem.first;
-				weightArr[elem.second][0].second = minIndex;
+				weightArr[elem.second].first = elem.first;
+				weightArr[elem.second].second = minIndex;
 			}
 		}
 		
@@ -57,16 +58,16 @@ int main(void) {
 
 		for (int i = 0; i < vertexCount; i++)
 		{
-			if (weightArr[i][0].first < beforeMin && !isInTree[i]) 
+			if (weightArr[i].first < beforeMin && !isInTree[i]) 
 			{
 				minIndex = i;
-				beforeMin = weightArr[i][0].first;
+				beforeMin = weightArr[i].first;
 			}
 		}
 
 		isInTree[minIndex] = true;
 
-		cout << weightArr[minIndex][0].second << " " << minIndex << " " << weightArr[minIndex][0].first << endl;
+		cout << weightArr[minIndex].second << " " << minIndex << " " << weightArr[minIndex].first << endl;
 	}
 
 	return 0;
