@@ -7,7 +7,7 @@ using namespace std;
 using pr = pair<int, int>;
 
 vector<pr> adj[10000];
-pr result[10000];
+int result[10000];
 bool isInTree[10000];
 
 int main() 
@@ -31,13 +31,11 @@ int main()
 	int count = 0;
 
 	
-	result[0].first = 0;
-	result[0].second = -1;
+	result[0] = 0;
 	
 	for (int i = 1; i < vertexCount; i++) 
 	{
-		result[i].first = INT32_MAX;
-		result[i].second = -1;
+		result[i] = INT32_MAX;
 	}
 	
 	int beforeIndex = 0;
@@ -49,10 +47,9 @@ int main()
 		for (auto elem : adj[beforeIndex]) 
 		{
 			if (!isInTree[elem.second] && 
-				(result[elem.second].first == INT32_MAX || result[elem.second].first > result[beforeIndex].first + elem.first))
+				(result[elem.second] == INT32_MAX || result[elem.second] > result[beforeIndex] + elem.first))
 			{
-				result[elem.second].first = result[beforeIndex].first + elem.first;
-				result[elem.second].second = beforeIndex;
+				result[elem.second] = result[beforeIndex] + elem.first;
 			}
 		}
 
@@ -62,10 +59,10 @@ int main()
 		{
 			if (isInTree[i]) continue;
 
-			if (min > result[i].first) 
+			if (min > result[i]) 
 			{
 				beforeIndex = i;
-				min = result[i].first;
+				min = result[i];
 			}
 		}
 
@@ -75,7 +72,7 @@ int main()
 
 	for (int i = 1; i < vertexCount; i++) 
 	{
-		cout << i << " " << result[i].first << endl;
+		cout << i << " " << result[i] << endl;
 	}
 
 	return 0;
