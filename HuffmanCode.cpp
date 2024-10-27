@@ -9,20 +9,12 @@ struct TreeNode
 	char data;
 	int freq;
 	TreeNode* left, * right;
-	TreeNode(char data, int freq, TreeNode * left = nullptr, TreeNode * right = nullptr)
+	TreeNode(char data = 0, int freq = 0, TreeNode * left = nullptr, TreeNode * right = nullptr)
 		: data(data), freq(freq), left(left), right(right) { }
-};
 
-struct Obj 
-{
-	char data;
-	int freq;
-
-	Obj(char data = '$', int freq = 0) : data(data), freq(freq) { }
-
-	bool operator()(const Obj& a, const Obj& b) const
+	bool operator()(const TreeNode* a, const TreeNode* b) const
 	{
-		return a.freq > b.freq;
+		return a->freq > b->freq;
 	}
 };
 
@@ -53,75 +45,40 @@ int main()
 	int n;
 	cin >> n;
 	
-	vector<Obj> arr(n);
+	vector<TreeNode *> arr(n);
 
 	for (int i = 0; i < n; i++)
 	{
-		cin >> arr[i].data >> arr[i].freq;
+		arr[i] = new TreeNode();
+		cin >> arr[i]->data >> arr[i]->freq;
 	}
 
-	priority_queue<Obj, vector<Obj>, Obj> pq;
+	priority_queue<TreeNode*, vector<TreeNode*>, TreeNode> pq;
 
 	for (int i = 0; i < n; i++)
 	{
 		pq.push(arr[i]);
 	}
 
-	TreeNode* root = nullptr;
-	TreeNode* beforeMerge = nullptr;
 
-	while (pq.size() > 0)
+	while (pq.size() > 1)
 	{
-		Obj a = pq.top(); pq.pop();
-		
-		if (beforeMerge == nullptr && pq.size() > 0) 
-		{	
-			Obj b = pq.top(); pq.pop();
+		TreeNode* left = pq.top(); pq.pop();
+		TreeNode* right = pq.top(); pq.pop();
 
-			TreeNode* left = new TreeNode(a.data, a.freq);
-			TreeNode* right = new TreeNode(b.data, b.freq);
+		TreeNode* newNode = new TreeNode('$', left->freq + right->freq, left, right);
 
-			TreeNode* parent = new TreeNode('$', a.freq + b.freq, left, right);
-
-			beforeMerge = parent;
-		}
-		else if(beforeMerge != nullptr)
-		{
-			TreeNode* left = nullptr;
-			TreeNode* right = nullptr;
-
-			if (beforeMerge->freq > a.freq) 
-			{
-				left = new TreeNode(a.data, a.freq);
-				right = beforeMerge;
-			}
-			else 
-			{
-				left = beforeMerge;
-				right = new TreeNode(a.data, a.freq);
-			}
-
-			TreeNode* parent = new TreeNode('$', a.freq + beforeMerge->freq, left, right);
-
-			beforeMerge = parent;
-		}
-		else 
-		{
-			beforeMerge = new TreeNode(a.data, a.freq);
-		}
-
-		if (pq.size() == 0) 
-		{
-			root = beforeMerge;
-			break;
-		}
+		pq.push(newNode);
 	}
 
-	string code = "";
+	TreeNode* root = pq.top(); pq.pop();
 
-	TreeNode* temp = root;
+	HuffmanCode(root, "");
 
-	HuffmanCode(temp, code);
+	for (auto elem : arr)
+	{
+		delete elem;
+	}
 
 	return 0;
 }
